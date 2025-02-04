@@ -10,6 +10,7 @@ A simple Android front-end application that interacts with the GitHub Users API.
 - **User List**: Displays a list of GitHub users retrieved from the API.
 - **User Details**: Tap on a user to view detailed information such as login, node ID, followers, following, gists, and more.
 - **Two-Column Layout**: Displayed user details are shown in a neat two-column grid for a better user experience.
+- **MVVM**: Implemented with MVVM architecture guidelines.
 
 ## Installation
 
@@ -44,8 +45,7 @@ This app interacts with the [GitHub Users API](https://docs.github.com/en/rest/u
 ## Libraries Used
 
 - **Jetpack Compose**: UI components for building the app interface.
-- **Retrofit**: Network library for handling API requests.
-- **Glide**: Image loading and caching.
+- **Volley**: Network library for handling API requests.
 - **Coil**: Image loading for Jetpack Compose (if used).
 
 ## Screenshots
@@ -60,7 +60,3 @@ This app interacts with the [GitHub Users API](https://docs.github.com/en/rest/u
 3. Commit your changes (`git commit -am 'Add feature'`).
 4. Push to the branch (`git push origin feature-name`).
 5. Create a new Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
