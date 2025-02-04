@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Github Access</string>
+    <string name="title_activity_user_details">UserDetailsActivity</string>
+</resources>
