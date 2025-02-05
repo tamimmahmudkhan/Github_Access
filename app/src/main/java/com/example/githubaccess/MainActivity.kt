@@ -1,36 +1,20 @@
 package com.example.githubaccess
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.android.volley.toolbox.Volley
-import com.example.githubaccess.service.GithubAccessService
 import com.example.githubaccess.views.composables.MainView
 import com.example.githubaccess.views.composables.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-lateinit var githubAccessService: GithubAccessService
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-private const val TAG = "MainActivity"
+/**
+ * Main activity. Responsible for initializing the view model and MainView for displaying userlist.
+ **/
 
 class MainActivity : ComponentActivity(), HostActivity {
-
-    val KEY_DATA = stringPreferencesKey("key_data")
 
     companion object{
         const val KEY_DETAILS = "user_details"
@@ -42,7 +26,6 @@ class MainActivity : ComponentActivity(), HostActivity {
         super.onCreate(savedInstanceState)
 
         val volley = Volley.newRequestQueue(this)
-        githubAccessService = GithubAccessService(volley, viewModel, viewModel)
         viewModel.getUserData(volley)
         val mainView = MainView(viewModel, this)
 
@@ -51,12 +34,6 @@ class MainActivity : ComponentActivity(), HostActivity {
     }
 
     override fun onClickFrom(position: Int) {
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            applicationContext.dataStore.edit { settings ->
-//                settings[KEY_DATA] = viewModel.userList.toString()
-//            }
-//        }
 
         val intent = Intent( this, UserDetailsActivity::class.java)
         val bundle = Bundle().apply {

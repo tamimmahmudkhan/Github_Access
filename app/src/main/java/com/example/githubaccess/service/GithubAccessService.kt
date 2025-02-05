@@ -5,27 +5,149 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.Response.ErrorListener
 import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.example.githubaccess.model.User
 import org.json.JSONArray
-import org.json.JSONObject
 
-class GithubAccessService(val volley: RequestQueue, val listener: Response.Listener<JSONArray>, val errorListener: ErrorListener) {
 
-    private val BASE_URL = "https://api.github.com/"
-    companion object{
-        val USERS_API = "https://api.github.com/users"
+/**
+ * Service class to access github USERS API.
+ * Encapsulates the github api from the app logic
+ **/
+
+
+class GithubAccessService private constructor(
+    private val volley: RequestQueue,
+    listener: Response.Listener<JSONArray>,
+    errorListener: ErrorListener
+) {
+
+    companion object {
+        const val USERS_API = "https://api.github.com/users"
+        private var githubAccessService: GithubAccessService? = null
+
+
+        fun getService(
+            volley: RequestQueue,
+            listener: Response.Listener<JSONArray>,
+            errorListener: ErrorListener
+        ): GithubAccessService {
+            if (this.githubAccessService == null) {
+                githubAccessService = GithubAccessService(volley, listener, errorListener)
+            }
+            return githubAccessService!!
+        }
     }
-    private val USER_API = "https://api.github.com/users/"
 
-    private val jsonArrayRequest  = JsonArrayRequest(Request.Method.GET, USERS_API, null,listener, errorListener)
+    private val jsonArrayRequest =
+        JsonArrayRequest(Request.Method.GET, USERS_API, null, listener, errorListener)
 
-    fun loadData(){
+    fun loadData() {
         volley.add(jsonArrayRequest)
     }
 
-    fun loadCountsFor(url: String){
-        volley.add(JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener))
+     fun requestFollower(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/followers",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestFollowing(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/following",
+            listener,
+            errorListener
+        )  ) }
+
+     fun requestGists(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/gists",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestSubs(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/subscriptions",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestOrgs(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/orgs",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestStarred(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/starred",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestRepos(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/repos",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestEvents(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/events",
+            listener,
+            errorListener
+        ))
+    }
+
+     fun requestRecEvnt(
+        url: String,
+        listener: Response.Listener<JSONArray>,
+        errorListener: ErrorListener
+    ) {
+        volley.add(JsonArrayRequest(
+            "$USERS_API/$url/received_events",
+            listener,
+            errorListener
+        ))
     }
 }

@@ -1,7 +1,6 @@
 package com.example.githubaccess.views.composables
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -13,10 +12,8 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -46,6 +43,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 private const val TAG = "UserDetailsView"
 
+/**
+ * User interface class for displaying individual user displays.
+ **/
+
 class UserDetailsView(
     private val userUIState: User,
     private val userDetailsData: StateFlow<UserDetailsData>
@@ -74,7 +75,7 @@ class UserDetailsView(
         modifier: Modifier,
         userDetailsData: UserDetailsData
     ) {
-        Card(modifier = Modifier.fillMaxSize(), shape = RectangleShape, elevation = CardDefaults.elevatedCardElevation()) {
+        Card(modifier = modifier.fillMaxSize(), shape = RectangleShape, elevation = CardDefaults.elevatedCardElevation()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -236,23 +237,3 @@ class UserDetailsView(
         val recEvnt: Int? = 0,
     )
 }
-
-
-/*
-                Text(text = "Login: ${userUIState.login}")
-                Text(text = "Node ID: ${userUIState.node_id}")
-                Text(text = "Gravatar ID: ${userUIState.gravatar_id}")
-                Text(text = "URL: ${userUIState.url}")
-                Text(text = "HTML URL: ${userUIState.html_url}")
-                Text(text = "Followers : ${userDetailsData.followers}")
-                Text(text = "Following : ${userDetailsData.following}")
-                Text(text = "Gists: ${userDetailsData.gists}")
-                Text(text = "Starred: ${userDetailsData.starred}")
-                Text(text = "Subscriptions: ${userDetailsData.subs}")
-                Text(text = "Organizations: ${userDetailsData.orgs}")
-                Text(text = "Repos: ${userDetailsData.repos}")
-                Text(text = "Events : ${userDetailsData.events}")
-                Text(text = "Received Events: ${userDetailsData.recEvnt}")
-                Text(text = "Type: ${userUIState.type}")
-                Text(text = "User View Type: ${userUIState.user_view_type}")
-                Text(text = "Site Admin: ${userUIState.site_admin}")*/

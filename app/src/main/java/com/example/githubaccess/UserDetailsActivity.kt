@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
 import com.example.githubaccess.model.User
 import com.example.githubaccess.service.GithubAccessService
@@ -14,12 +13,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.json.JSONObject
 
+/**
+ *  Activity to show user details
+ **/
+
 class UserDetailsActivity : ComponentActivity() {
 
     private val userDetailsData = UserDetailsView.UserDetailsData()
     private val uiMutableState = MutableStateFlow(userDetailsData)
     private val uiState = uiMutableState.asStateFlow()
     private lateinit var user : User
+    private lateinit var githubAccessService: GithubAccessService
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,18 +34,9 @@ class UserDetailsActivity : ComponentActivity() {
         )
 
         val volley = Volley.newRequestQueue(this)
+        githubAccessService = GithubAccessService.getService(volley, {}, {})
 
-        val usrURL = "${GithubAccessService.USERS_API}/${user.login}"
-
-        volley.add(requestFollower("$usrURL/followers"))
-        volley.add(requestFollowing("$usrURL/following"))
-        volley.add(requestGists("$usrURL/gists"))
-        volley.add(requestStarred("$usrURL/starred"))
-        volley.add(requestRepos("$usrURL/repos"))
-        volley.add(requestSubs("$usrURL/subscriptions"))
-        volley.add(requestOrgs("$usrURL/orgs"))
-        volley.add(requestRecEvnt("$usrURL/received_events"))
-        volley.add(requestEvents("$usrURL/events"))
+        makeRequests()
 
         val view = UserDetailsView(user, uiState)
 
@@ -49,173 +44,140 @@ class UserDetailsActivity : ComponentActivity() {
         setContent {view.GetView()}
     }
 
-    private fun requestFollower(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
+    private fun makeRequests(){
+        githubAccessService.apply {
+            requestFollower(user.login!!, { response ->
                 uiMutableState.update {
                     it.copy(
                         followers = response.length()
                     )
                 }
             },
-            { uiMutableState.update {
-                it.copy(
-                    followers = -1
-                )
-            } }
-        )
-    }
-    private fun requestFollowing(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
+                { uiMutableState.update {
+                    it.copy(
+                        followers = -1
+                    )
+                } })
+            requestFollowing(user.login!!,{ response ->
                 uiMutableState.update {
                     it.copy(
                         following = response.length()
                     )
                 }
             },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        following = -1
-                    )
-                }
-            }
-        )
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            following = -1
+                        )
+                    }
+                })
+            requestSubs(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            subs = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            subs = -1
+                        )
+                    }
+                })
+            requestGists(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            gists = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            gists = -1
+                        )
+                    }
+                })
+            requestRecEvnt(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            recEvnt = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            recEvnt = -1
+                        )
+                    }
+                })
+            requestRepos(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            repos = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            repos = -1
+                        )
+                    }
+                })
+            requestStarred(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            starred = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            starred = -1
+                        )
+                    }
+                })
+            requestOrgs(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            orgs = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            orgs = -1
+                        )
+                    }
+                })
+            requestEvents(user.login!!,
+                { response ->
+                    uiMutableState.update {
+                        it.copy(
+                            events = response.length()
+                        )
+                    }
+                },
+                {
+                    uiMutableState.update {
+                        it.copy(
+                            events = -1
+                        )
+                    }
+                })
+        }
     }
-    private fun requestGists(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        gists = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        gists = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestSubs(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        subs = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        subs = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestOrgs(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        orgs = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        orgs = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestStarred(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        starred = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        starred = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestRepos(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        repos = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        repos = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestEvents(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        events = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        events = -1
-                    )
-                }
-            }
-        )
-    }
-    private fun requestRecEvnt(url: String): JsonArrayRequest {
-        return  JsonArrayRequest(
-            url,
-            { response ->
-                uiMutableState.update {
-                    it.copy(
-                        recEvnt = response.length()
-                    )
-                }
-            },
-            {
-                uiMutableState.update {
-                    it.copy(
-                        recEvnt = -1
-                    )
-                }
-            }
-        )
-    }
+
 }
