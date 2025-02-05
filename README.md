@@ -1,5 +1,7 @@
-# Android GitHub ユーザー API アプリ
-(English version below)
+# Android GitHub ユーザー API アプリ 
+
+English version below
+
 GitHub ユーザー API と連携するシンプルな Android フロントエンドアプリケーションです。このアプリでは以下の操作ができます：
 
 - GitHub ユーザーの公開リストを見る。
